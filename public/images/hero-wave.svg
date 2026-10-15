@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" preserveAspectRatio="none">
+  <defs>
+    <filter id="ink" x="-15%" y="-25%" width="130%" height="150%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="12" result="grain"/>
+      <feColorMatrix in="grain" type="saturate" values="0"/>
+      <feComponentTransfer>
+        <feFuncR type="linear" slope="3" intercept="-1"/>
+        <feFuncG type="linear" slope="3" intercept="-1"/>
+        <feFuncB type="linear" slope="3" intercept="-1"/>
+      </feComponentTransfer>
+    </filter>
+    <filter id="soft" x="-15%" y="-25%" width="130%" height="150%">
+      <feGaussianBlur stdDeviation="30"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="1000" fill="#f3f3f1"/>
+  <g filter="url(#soft)">
+    <path d="M-120 540 C80 770 220 690 390 510 S650 420 800 695 S1040 1090 1260 770 S1510 480 1730 670 L1730 1150 L-120 1150Z" fill="#555555"/>
+    <path d="M-120 540 C80 770 220 690 390 510 S650 420 800 695 S1040 1090 1260 770 S1510 480 1730 670" fill="none" stroke="#111111" stroke-width="175"/>
+  </g>
+  <rect width="1600" height="1000" opacity="0.45" filter="url(#ink)" fill="#808080" style="mix-blend-mode:soft-light"/>
+</svg>

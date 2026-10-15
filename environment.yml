@@ -1,0 +1,17 @@
+# Conda environment for Louisa's portfolio site.
+#
+# Optional: the website needs only Node.js and npm, not Python or Conda.
+# Create:  conda env create -f environment.yml
+# Run:     conda run -n portfolio npm run dev
+#
+# Node packages (Astro and its integrations) are installed by npm from
+# package.json; this file only provides the runtimes and Python helpers.
+name: portfolio
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - nodejs=24     # runs Astro and npm (use 22 if 24 is unavailable)
+  - python=3.12   # helper scripts
+  - pymupdf       # read and render the course PDFs
+  - pillow        # placeholder images and image checks

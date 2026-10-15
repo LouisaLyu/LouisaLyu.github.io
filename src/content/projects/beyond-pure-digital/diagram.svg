@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="300" viewBox="0 0 960 300" fill="none">
+  <!-- Two ways into one sketch. The Arduino Uno and the Makey Makey are drawn as one step until Louisa confirms the wiring (openquestion.md, A10). -->
+  <g class="ink-zhong" stroke="currentColor" stroke-width="1.25">
+    <rect x="20" y="40" width="220" height="64" rx="32"/>
+    <rect x="20" y="196" width="220" height="64" rx="32"/>
+    <rect x="290" y="40" width="220" height="64" rx="32"/>
+  </g>
+  <rect class="ink-accent" x="610" y="118" width="170" height="64" rx="32" stroke="currentColor" stroke-width="1.25"/>
+  <g class="ink-dan" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M250 72H280M274 66L280 72L274 78"/>
+    <path d="M520 72H555Q575 72 575 92V150"/>
+    <path d="M250 228H555Q575 228 575 208V150"/>
+    <path d="M575 150H604M598 144L604 150L598 156"/>
+    <path d="M790 150H820M814 144L820 150L814 156"/>
+  </g>
+  <g fill="currentColor" font-size="20" font-weight="500" text-anchor="middle">
+    <text class="ink-jiao" text-anchor="middle" x="130" y="79">Eight buttons</text>
+    <text class="ink-jiao" text-anchor="middle" x="130" y="235">Keyboard</text>
+    <text class="ink-jiao" text-anchor="middle" x="400" y="79">Two boards</text>
+    <text class="ink-accent" text-anchor="middle" x="695" y="157">p5.js sketch</text>
+  </g>
+  <g class="ink-dan" fill="currentColor" font-size="16">
+    <text x="400" y="134" text-anchor="middle">Arduino Uno, Makey Makey</text>
+    <text x="130" y="290" text-anchor="middle">Arrow keys, W, A, S, D</text>
+    <text x="585" y="108">11 presses</text>
+    <text x="585" y="210">One press</text>
+  </g>
+  <g class="ink-zhong" fill="currentColor" font-size="18">
+    <text x="830" y="126">Colour</text>
+    <text x="830" y="156">Bubbles</text>
+    <text x="830" y="186">Note</text>
+  </g>
+</svg>

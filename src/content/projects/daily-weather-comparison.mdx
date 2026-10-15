@@ -1,0 +1,94 @@
+---
+title: Daily Weather Comparison
+description: >-
+  A functional prototype of a weather app that compares the weather between any
+  two cities side by side to eliminate back-and-forth switches.
+kind: problem-solving
+year: 2026
+role: Conceptualization, Investigation, Coding, Visualization
+dates: March 24, 2026 – present
+tools: [HTML, CSS, JavaScript, Chart.js, Open-Meteo]
+skills: [Research, Identifying user needs, Data visualization, Visual communication, Coding]
+link:
+  href: https://visualize-info-project-2.vercel.app/
+  label: Try the app
+cover: ./daily-weather-comparison/cover.png
+coverAlt: "The weather app on a desktop: two city search boxes above current conditions and today’s plan."
+intro: >-
+  In typical weather apps, comparing two places means switching back and forth
+  between them. For a person who wants a quick decision about what to do when
+  travelling, this switching can lead to difficulty in recalling information.
+  This project, “Daily Weather Comparison”, helps people make faster, more
+  informed decisions by putting the forecasts for any two cities side by side
+  and turning them into concrete suggestions, such as whether to bring rain
+  gear, whether to add a layer and which place is less comfortable right now.
+hasProcess: true
+status: draft
+order: 2
+---
+import Figure from '../../components/Figure.astro';
+import Gallery from '../../components/Gallery.astro';
+import marchFirst from './daily-weather-comparison/march-first.png';
+import marchCards from './daily-weather-comparison/march-cards.png';
+import marchSage from './daily-weather-comparison/march-sage.png';
+import marchBlue from './daily-weather-comparison/march-blue.png';
+import marchFinal from './daily-weather-comparison/march-final.png';
+import chart from './daily-weather-comparison/chart.png';
+import tablet from './daily-weather-comparison/tablet.png';
+import phones from './daily-weather-comparison/phones.png';
+
+{/* DRAFT, 2026-10-11: Claude's prose v2 from Louisa's answers, put in at her request; she edits later. Source and notes: plansAndWorks/week3-4-to-submit/07-process-outline.md
+    The same sections as every project (Louisa, 2026-10-12): the intro names the project and the problem, then Goal, Method, Outcome, Insights.
+    A problem-solving project, so Method shows how the goal is reached (Presenting Your Work, slide 18).
+    Outcome is the current app (from September); Method holds the March versions as evidence for its findings. */}
+
+## Goal
+
+The goal of this project is to build a data visualization web page so that users can quickly see how the weather in two places changes over the next hours and days.
+
+## Method
+
+{/* Strands (Louisa, 2026-10-13): Persona identification (who it is for and what they need), Comparison visualization
+    and data summarization (the line graphs and the advice cards) and Design iteration (the layout and bug fixes and the colour tests).
+    Each runs test → finding → decision. Headings are Louisa's, in sentence case. */}
+
+### Persona identification
+
+The investigation begins with a persona, which helps establish a better understanding of the users’ needs. Built on research on student commuting and on how weather affects travel, the persona at the centre of this project is a student who commutes and checks the weather before leaving and again when plans change, comparing places before deciding whether to travel or stay put. Her needs include quickly comparing the weather in two locations and seeing short-term changes.
+
+This leads to the initial design of the web page, which puts the weather data for two cities, chosen from a fixed list, side by side. This answers the persona’s first need: comparing two places without switching between forecasts. Time-range buttons answer the second, showing how the weather changes over the next day, seven days or 14 days.
+
+<Figure src={marchFirst} alt="First version in slate and white: a large title, two city drop-downs, time and metric buttons and four current readings." caption="The first version, with a fixed list of cities and a plain layout." />
+
+### Comparison visualization and data summarization
+
+Comparison also makes a forecast easier to understand. People tend to have a weak sense of what an absolute temperature feels like. However, when comparing it with their current city’s weather, they get a more concrete understanding of what the weather is like in a different city. This leads to the decision to visualize the two locations’ temperatures as line graphs so that people can compare quickly.
+
+Additionally, to further support quick decisions, an interview is conducted to see what weather factors influence one’s decision when travelling. This identifies three things: chance of rain, temperature and wind speed. Because of this, advice cards are added to the top, as the image below shows, so the user no longer has to scroll around the app for this information.
+
+<Figure src={marchCards} alt="Advice cards for rain gear, an extra layer and the harder location sit above the controls and the chart." caption="Advice cards for rain gear, an extra layer and the harder location." />
+
+### Design iteration
+
+Following the initial prototype, a range of colours and layouts is explored, as shown below. The different layouts are used to find the least cluttered look, while the colours are chosen to resemble the sky, which fits people’s impression of “weather”. This experiment leads to the final look of the web page in the Outcome section.
+
+<Gallery>
+  <Figure src={marchSage} alt="Colour test in sage: grey-green cards and a temperature chart with a solid blue-grey line and a dashed green one." caption="A colour test in sage." />
+  <Figure src={marchBlue} alt="Colour test in pale blue: 14 days of cloud cover drawn as a lilac-filled chart." caption="A colour test in pale blue." />
+  <Figure src={marchFinal} alt="Blue-grey dashboard: advice cards, city drop-downs, filter buttons, four current readings, a two-line chart and a table." caption="A colour test in blue-grey." />
+</Gallery>
+
+## Outcome
+
+The final product is a fully functional website that compares the weather between any two cities in the world through a search bar, using live forecasts from Open-Meteo (an open-source weather data service), so users no longer need to switch between cities when deciding whether to go out. The website shows the relative temperature between the two cities and a number of advice cards that inform the user of today’s suggested plans, so users can get an intuitive idea of what the weather is like rather than just abstract numbers. The data is switchable between the next 24 hours, seven days and 14 days, so users can see how the weather in both places changes over hours and days, supporting both short outings and long travel plans. The layout is kept minimal and the colours resemble the sky on a clear day, so the page stays easy to scan and matches people’s impression of weather.
+
+<Gallery>
+  <Figure src={tablet} alt="The app at tablet width, with current conditions and today’s plan stacked in one column." caption="At tablet width." />
+  <Figure src={phones} alt="Two phone screens: the app with both search boxes above current conditions, and a city search open on a list of matching places." caption="On a phone, and searching for any city." />
+</Gallery>
+
+<Figure src={chart} alt="Forecast chart comparing two cities, one as a solid blue line and one as a dashed violet line, beside a table of values." caption="The data visualization section that compares temperature between two cities." />
+
+## Insights
+
+This project offers several pieces of insight and knowledge that are transferable to other works. Layout choices are most effective when informed by users’ needs, as with the advice cards placed at the top of the page because of the interview findings. Setting up a fully functional website with an application programming interface (API) and a data pipeline also builds experience for future web projects.

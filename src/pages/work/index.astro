@@ -1,0 +1,60 @@
+---
+import { getCollection } from 'astro:content';
+import { Picture } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { url } from '../../lib/url';
+import { words } from '../../lib/text';
+
+// The page's words are in src/content/text/work.md; the projects are the
+// files in src/content/projects/.
+const work = (await words('work')).data;
+// The labels on project pages (Skills, Tools) also name the lines under each title here.
+const labels = (await words('projectPage')).data.facts;
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+// One filter per skill, the skills most projects share first.
+const counts = new Map<string, number>();
+for (const project of projects) {
+  for (const skill of project.data.skills ?? []) counts.set(skill, (counts.get(skill) ?? 0) + 1);
+}
+const filters = [...counts].sort((a, b) => b[1] - a[1]);
+---
+
+<BaseLayout title={work.title} description={work.description}>
+  <section class="container page-hero">
+    <h1 class="page-hero__title display" data-reveal-lines><span class="line">{work.title}</span></h1>
+    <p class="page-hero__aside" data-reveal>{work.intro}</p>
+  </section>
+
+  <section class="container" aria-label="Projects">
+    <div class="filters" data-filter role="group" aria-label="Filter by skill">
+      <button class="filter" type="button" data-value="all" aria-pressed="true">{work.allFilter}<sup>{projects.length}</sup></button>
+      {filters.map(([skill, count]) => (
+        <button class="filter" type="button" data-value={skill} aria-pressed="false">{skill}<sup>{count}</sup></button>
+      ))}
+    </div>
+    <ol class="work-list">
+      {projects.map((project) => {
+        // A FILLER slot has no page: its row is not a link, shows only its
+        // title, and has no arrow (Louisa, 2026-10-11; no year, 2026-10-12).
+        const filler = project.data.status === 'filler';
+        const Link = filler ? 'div' : 'a';
+        return (
+          <li class="work-row" data-skills={JSON.stringify(project.data.skills ?? [])} data-reveal>
+            <Link class="work-row__link" href={filler ? undefined : url(`/work/${project.id}/`)}>
+              <span class="work-row__thumb">
+                <Picture src={project.data.cover} alt="" widths={[400, 800]} width={Math.min(project.data.cover.width, 800)} sizes="(min-width: 90rem) 20rem, (min-width: 64rem) 22vw, 100vw" formats={['avif', 'webp']} fallbackFormat="webp" />
+              </span>
+              <span class="work-row__text">
+                <span class="work-row__title">{project.data.title}</span>
+                {!filler && project.data.skills && <span class="work-row__line"><span class="label">{labels.skills}</span><span>{project.data.skills.join(', ')}</span></span>}
+                {!filler && <span class="work-row__line"><span class="label">{labels.tools}</span><span>{project.data.tools.join(', ')}</span></span>}
+              </span>
+              {!filler && <span class="work-row__meta">{project.data.year}</span>}
+              {!filler && <span class="work-row__arrow" aria-hidden="true">→</span>}
+            </Link>
+          </li>
+        );
+      })}
+    </ol>
+  </section>
+</BaseLayout>

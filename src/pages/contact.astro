@@ -1,0 +1,43 @@
+---
+// Contact. Its words are in src/content/text/contact.md; the email and the
+// links are in site.md.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { words } from '../lib/text';
+
+const site = (await words('site')).data;
+const contact = (await words('contact')).data;
+---
+
+<BaseLayout title={contact.title} description={contact.description}>
+  <section class="container page-hero">
+    <h1 class="page-hero__title display" data-reveal-lines><span class="line">{contact.title}</span></h1>
+    <p class="page-hero__aside" data-reveal>{contact.intro}</p>
+  </section>
+
+  <section class="container contact-list" aria-label="Ways to get in touch">
+    <div class="contact-item" data-reveal>
+      <p class="label">{contact.emailLabel}</p>
+      <a class="contact-item__email" href={`mailto:${site.email}`}>{site.email}</a>
+    </div>
+    {/* The phone number, under the email and on this page only (Louisa,
+        2026-10-15). */}
+    <div class="contact-item contact-item--phone" data-reveal>
+      <p class="label">{contact.phoneLabel}</p>
+      <a class="contact-item__email" href={`tel:+1${contact.phone.replace(/\D/g, '')}`}>{contact.phone}</a>
+    </div>
+    <div class="contact-item contact-item--links" data-reveal>
+      <p class="label">{contact.linksLabel}</p>
+      {/* The link shows your name, as the profile does; the label above names
+          the site, and screen readers hear both (Louisa, 2026-10-13). */}
+      <ul>
+        {site.links.map((link) => (
+          <li>
+            <a class="link-arrow link-arrow--external" href={link.href} target="_blank" rel="noopener">
+              {site.name}<span class="visually-hidden"> on {link.label} (opens in a new tab)</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

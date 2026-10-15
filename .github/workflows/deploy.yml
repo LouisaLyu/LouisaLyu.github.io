@@ -1,0 +1,49 @@
+# Builds the site and publishes it to GitHub Pages on every push to main.
+# One-time setup in the repo: Settings → Pages → Source: GitHub Actions.
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      # A repo named <owner>.github.io is served at the root of
+      # https://<owner>.github.io; any other repo is served at /<repo>/.
+      # With a custom domain, set SITE_URL to it and BASE_PATH to / instead.
+      - name: Work out the site address
+        run: |
+          owner="${GITHUB_REPOSITORY_OWNER,,}"
+          repo="${GITHUB_REPOSITORY#*/}"
+          echo "SITE_URL=https://$owner.github.io" >> "$GITHUB_ENV"
+          if [ "${repo,,}" = "$owner.github.io" ]; then
+            echo "BASE_PATH=/" >> "$GITHUB_ENV"
+          else
+            echo "BASE_PATH=/$repo" >> "$GITHUB_ENV"
+          fi
+      - uses: withastro/action@v6
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

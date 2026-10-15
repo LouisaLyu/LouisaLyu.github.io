@@ -1,0 +1,20 @@
+---
+// The page for addresses that do not exist. Its words are in
+// src/content/text/not-found.md.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { url } from '../lib/url';
+import { words } from '../lib/text';
+
+const page = (await words('notFound')).data;
+---
+
+<BaseLayout title={page.title} noindex>
+  <section class="container notfound">
+    <h1 class="notfound__code display">404</h1>
+    <p class="lead prose">{page.message}</p>
+    <p class="cta__row">
+      <a class="btn" href={url('/')}>{page.homeButton}</a>
+      <a class="btn" href={url('/work/')}>{page.workButton}</a>
+    </p>
+  </section>
+</BaseLayout>

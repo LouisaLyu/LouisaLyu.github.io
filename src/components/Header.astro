@@ -1,0 +1,30 @@
+---
+import { url } from '../lib/url';
+import { menu, words } from '../lib/text';
+
+interface Props {
+  progress?: boolean;
+}
+
+const { progress = false } = Astro.props;
+const site = (await words('site')).data;
+const nav = await menu();
+const path = Astro.url.pathname;
+// "page" for the page itself, "true" for pages inside that section (a project under Work).
+const current = (href: string) => (path === url(href) ? 'page' : path.startsWith(url(href)) ? 'true' : undefined);
+---
+
+<header class="site-header">
+  <nav class="pill" aria-label="Main">
+    <a class="pill__brand" href={url('/')}>{site.name}</a>
+    <ul class="pill__links" id="site-menu">
+      {nav.map((item) => (
+        <li><a href={url(item.href)} aria-current={current(item.href)}>{item.label}</a></li>
+      ))}
+    </ul>
+    <button class="pill__toggle" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Menu">
+      <span class="dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    </button>
+    {progress && <div class="progress" aria-hidden="true"><span data-progress></span></div>}
+  </nav>
+</header>

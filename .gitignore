@@ -1,0 +1,33 @@
+# build output
+dist/
+
+# generated types
+.astro/
+
+# dependencies
+node_modules/
+.npm-cache/
+
+# Python bytecode from the filler scripts
+__pycache__/
+
+# logs
+npm-debug.log*
+
+# environment variables
+.env
+.env.production
+
+# test output
+test-results/
+playwright-report/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+process/
+ProjectReferences/
+
+# plans, drafts and course files stay on this computer
+plansAndWorks/

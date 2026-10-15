@@ -1,0 +1,62 @@
+---
+# Copy this file to start a new project, e.g. my-project.mdx, and put its
+# images in a folder of the same name (src/content/projects/my-project/).
+# Files whose names start with "_" are not published.
+title: Project title
+# One or two sentences for search results and link previews (not shown on
+# the page). Open with the action-verb framing ("An investigation into…",
+# "A functional prototype of…" or "A conceptualization of…").
+description: A functional prototype of … One sentence on what it does.
+kind: problem-solving   # or: investigation
+year: 2027
+role: What you did, e.g. Research and design
+dates: January 12 – February 20, 2027   # start to end; "– present" if ongoing
+tools: [Figma, Illustrator]
+# Optional: a live version people can use, shown as a button at the top.
+# link: { href: https://example.com/, label: Try the prototype }
+# Skills the project shows. Use the names in the skills list in
+# src/content/text/about.md (add a new one there first); the build stops on
+# any other name. The Work page filters by these.
+skills: [Research, Physical prototyping]
+cover: ./my-project/cover.jpg   # at most 2400 px on the long edge
+coverAlt: Describe what the cover image shows.
+# The short introduction: 60–100 words, outcome and "why" first, present tense.
+# It is the first text under the cover, and it names the project (and, for
+# problem-solving, the problem), so the process below does not repeat it.
+intro: >-
+  Outcome sentence. Why it matters. The finding or decision that shaped it.
+  The result.
+hasProcess: false       # true if the body below is a full process outline
+status: draft           # filler | draft | published
+order: 3                # position on the Work page
+---
+
+{/* Optional: the process outline goes here. Every project uses the same
+    sections, after Presenting Your Work, slides 17–18; the intro names the
+    project (and its problem), so the outline starts at the goal:
+      ## Goal
+      ## Method     one ### per strand of the work (e.g. the scene on screen
+                    and the physical input), its images under it; each strand
+                    runs test → finding → decision, not a list of steps; for
+                    an investigation, the findings are the learning outcomes
+      ## Outcome    the finished piece: show it (images, video, diagram), what
+                    it does and where it stands; the intro only names it
+      ## Insights   what carries into other work
+    Say each thing once: what the intro says, the sections do not repeat.
+    Visuals sit between paragraphs. Put their files in ./my-project/, import
+    them below the front matter, and give each one alt text and a caption:
+
+    import Figure from '../../components/Figure.astro';
+    import Gallery from '../../components/Gallery.astro';
+    import Video from '../../components/Video.astro';
+    import screen from './my-project/screen.jpg';
+    import flow from './my-project/flow.svg';
+    import flowNarrow from './my-project/flow-narrow.svg';
+    import clip from './my-project/clip.mp4';
+    import clipPoster from './my-project/clip-poster.jpg';
+
+    <Figure src={screen} alt="What the image shows." caption="What it shows and why it matters." />
+    <Figure src={flow} narrow={flowNarrow} alt="…" caption="…" />    an SVG diagram; narrow is an optional phone version
+    <Video mp4={clip} poster={clipPoster} alt="…" caption="…" />    5 MB or less; the poster is a frame from the clip; add small for a portrait or low-resolution clip
+    <Gallery>two or more Figures side by side; each gets width by its shape, so their heights match</Gallery>
+*/}

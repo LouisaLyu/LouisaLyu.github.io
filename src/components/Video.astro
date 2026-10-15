@@ -1,0 +1,66 @@
+---
+// A video clip with a poster frame and a caption. It never plays on its own,
+// and nothing downloads until play is pressed: the poster is a lazy-loaded
+// picture laid over the video, sized for each screen like any other image.
+// Import the files from the project's folder:
+//   import clip from './my-project/clip.mp4';
+//   import clipPoster from './my-project/clip-poster.jpg';
+//   <Video mp4={clip} poster={clipPoster} alt="What the clip shows." caption="…" />
+// Keep each file to 5 MB or less. MP4 (H.264) plays everywhere; add a WebM
+// version as well only if it is smaller. The poster is a frame from the clip.
+// If the clip has speech, add captions as a WebVTT file: captions={clipCaptions}.
+// `loop` repeats the clip once it is playing. `small` is for low-resolution
+// or portrait clips: it sits in the text column and never shows wider than
+// its own frames.
+// Every clip is also kept shorter than the screen, so it can be watched whole.
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  mp4?: string;
+  webm?: string;
+  poster: ImageMetadata;
+  alt: string;
+  caption?: string;
+  captions?: string;
+  loop?: boolean;
+  small?: boolean;
+}
+
+const { mp4, webm, poster, alt, caption, captions, loop = false, small = false } = Astro.props;
+// Poster sizes up to the poster's own width, never enlarged.
+const widths = [...new Set([640, 960, 1280, 1920].filter((w) => w < poster.width).concat(poster.width))];
+if (!mp4 && !webm) throw new Error(`<Video alt="${alt}"> needs an mp4 or a webm file.`);
+// The poster is a frame from the clip, so it has the clip's shape. --ar caps
+// the height (global.css); --max-w keeps a small clip at its own size.
+const ar = (poster.width / poster.height).toFixed(4);
+const style = `--ar: ${ar}` + (small ? `; --max-w: ${poster.width}px` : '');
+---
+
+<figure class:list={['figure figure--video', { 'figure--text': small }]} style={style} data-reveal>
+  <div class="figure__media">
+    <video controls playsinline loop={loop} preload="none" width={poster.width} height={poster.height} aria-label={alt}>
+      {webm && <source src={webm} type="video/webm" />}
+      {mp4 && <source src={mp4} type="video/mp4" />}
+      {captions && <track kind="captions" src={captions} srclang="en" label="English" default />}
+      <a href={mp4 ?? webm}>Download the video</a>
+    </video>
+    <Picture
+      src={poster}
+      alt=""
+      widths={widths}
+      sizes="(min-width: 90rem) 86rem, 100vw"
+      formats={['avif', 'webp']}
+      fallbackFormat="webp"
+      pictureAttributes={{ class: 'figure__poster' }}
+    />
+    <button class="figure__play" type="button" aria-label={`Play video: ${alt}`} hidden>
+      <span>
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M5 3.5v9l7.5-4.5z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+        </svg>
+      </span>
+    </button>
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>

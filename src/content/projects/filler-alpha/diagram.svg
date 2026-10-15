@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="220" viewBox="0 0 960 220" fill="none">
+  <!-- FILLER: four connected steps, with a loop from the third step back to the second. -->
+  <g class="ink-zhong" stroke="currentColor" stroke-width="1.25">
+    <rect x="20" y="100" width="182" height="64" rx="32"/>
+    <rect x="266" y="100" width="182" height="64" rx="32"/>
+    <rect x="512" y="100" width="182" height="64" rx="32"/>
+  </g>
+  <rect class="ink-accent" x="758" y="100" width="182" height="64" rx="32" stroke="currentColor" stroke-width="1.25"/>
+  <g class="ink-dan" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M212 132H256M250 126L256 132L250 138"/>
+    <path d="M458 132H502M496 126L502 132L496 138"/>
+    <path d="M704 132H748M742 126L748 132L742 138"/>
+    <path d="M603 92C603 40 357 40 357 92" stroke-dasharray="4 6"/>
+    <path d="M351 86L357 92L363 86"/>
+  </g>
+  <g fill="currentColor" font-size="20" font-weight="500" text-anchor="middle">
+    <text class="ink-jiao" x="111" y="139">Lorem</text>
+    <text class="ink-jiao" x="357" y="139">Ipsum</text>
+    <text class="ink-jiao" x="603" y="139">Dolor</text>
+    <text class="ink-accent" x="849" y="139">Amet</text>
+  </g>
+  <g class="ink-dan" fill="currentColor" font-size="16" text-anchor="middle">
+    <text x="480" y="38">Sed do</text>
+    <text x="111" y="196">Consectetur</text>
+    <text x="357" y="196">Adipiscing elit</text>
+    <text x="603" y="196">Sed eiusmod</text>
+    <text x="849" y="196">Tempor</text>
+  </g>
+</svg>

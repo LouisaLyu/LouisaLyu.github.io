@@ -1,0 +1,798 @@
+/* Global styles: base, layout and components. Uses tokens.css.
+   Direction: Alta's structure, made calm, precise and clear (Louisa's words):
+   ink-and-paper tones, soft slow motion, precise but never sharp.
+   Notes: process/2026-09-23_design-concept.md */
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  font-weight: var(--body-wght);
+  font-optical-sizing: auto;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+img, picture, svg, video { display: block; max-width: 100%; height: auto; }
+h1, h2, h3, h4 { margin: 0; color: var(--text-strong); font-weight: var(--heading-wght); line-height: 1.1; text-wrap: balance; }
+p { margin: 0 0 1em; text-wrap: pretty; }
+a { color: inherit; text-underline-offset: 0.2em; }
+ul, ol { margin: 0; padding: 0; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+::selection { background: var(--accent); color: var(--white); }
+
+.container { width: 100%; max-width: var(--max); margin-inline: auto; padding-inline: var(--gutter); }
+.section { padding-block: var(--section); }
+/* One space between sections, never two: a section that follows another, or
+   ends the page above the footer (whose margin is the space), drops its own. */
+.section + .section { padding-top: 0; }
+main > .section:last-child { padding-bottom: 0; }
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
+.skip-link {
+  position: fixed; left: 1rem; top: -4rem; z-index: 100; font-family: var(--font-ui);
+  padding: 0.6rem 1rem; border-radius: var(--r-sm);
+  background: var(--n-900); color: var(--n-50); text-decoration: none;
+}
+.skip-link:focus { top: 1rem; }
+
+/* Four hairline columns behind every page: a quiet, precise grid. */
+.grid-overlay {
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  width: 100%; max-width: var(--max); margin-inline: auto; padding-inline: var(--gutter);
+}
+.grid-overlay span { border-left: 1px solid var(--grid-line); }
+.grid-overlay span:last-child { border-right: 1px solid var(--grid-line); }
+
+/* ---------- Type ---------- */
+.display {
+  font-family: var(--font-display);
+  font-weight: calc(var(--display-wght) + var(--wght-adjust));
+  letter-spacing: var(--display-track);
+  line-height: 1.02;
+}
+/* Staggered heading lines, as in Alta. Offsets stay small on phones so nothing leaves the screen. */
+.display .line { display: block; }
+.display .line--in { padding-left: 0.9em; }
+.display .line--in-sm { padding-left: 0.3em; }
+@media (min-width: 64rem) {
+  .display .line--in { padding-left: 1.7em; }
+  .display .line--in-sm { padding-left: 0.5em; }
+  .display .line--out { margin-left: -0.9em; }
+}
+.h-sm {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-weight: calc(var(--heading-wght) - 50 + var(--wght-adjust));
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+.mono { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; }
+.label {
+  margin: 0; color: var(--text-2);
+  font-family: var(--font-mono); font-size: 0.75rem; font-weight: 450; letter-spacing: 0.06em; text-transform: uppercase;
+}
+.label__num { color: var(--accent); margin-right: 0.75em; }
+.lead { color: var(--text-3); font-size: var(--step-1); line-height: 1.5; }
+.muted { color: var(--text-3); }
+.prose { max-width: var(--measure); }
+
+/* Dark sections: flip the colour roles and lighten type weights. .on-ink does
+   the same for text that sits on ink without a panel (the Home facts). */
+.theme-dark, .on-ink {
+  --text-strong: var(--inverse-text-strong);
+  --text: var(--inverse-text);
+  --text-3: var(--inverse-text-3);
+  --text-2: var(--inverse-text-2);
+  --line: var(--inverse-line);
+  --surface: var(--inverse-surface);
+  --accent: #a9b6dc; /* 8.5:1 on the dark panels */
+  --body-wght: 370;
+  --wght-adjust: -30;
+  color: var(--text);
+  font-weight: var(--body-wght);
+}
+.theme-dark { background: var(--inverse-bg); }
+
+/* Crop marks just outside a block's corners, like a print proof. */
+.crop { position: relative; }
+.crop::after {
+  --mark: var(--line); --len: 10px;
+  content: ""; position: absolute; inset: -9px; pointer-events: none;
+  background:
+    linear-gradient(var(--mark) 0 0) top left / var(--len) 1px,
+    linear-gradient(var(--mark) 0 0) top left / 1px var(--len),
+    linear-gradient(var(--mark) 0 0) top right / var(--len) 1px,
+    linear-gradient(var(--mark) 0 0) top right / 1px var(--len),
+    linear-gradient(var(--mark) 0 0) bottom left / var(--len) 1px,
+    linear-gradient(var(--mark) 0 0) bottom left / 1px var(--len),
+    linear-gradient(var(--mark) 0 0) bottom right / var(--len) 1px,
+    linear-gradient(var(--mark) 0 0) bottom right / 1px var(--len);
+  background-repeat: no-repeat;
+}
+
+/* Images print into the paper rather than sitting on the screen: multiplied,
+   so light areas take the paper's tone the way ink does. */
+.card__img, .figure__media img, .figure__media video, .project-cover img, .work-row__thumb img, .about-intro__portrait img { mix-blend-mode: multiply; }
+
+/* ---------- Buttons and links ---------- */
+/* Interface text (buttons, menu, filters, section links, footer) is set in
+   Switzer; reading text is Source Serif. */
+/* Buttons are in 浓墨, a dark grey rather than the near-black of the headings
+   (Louisa, 2026-10-12); the light text on it is 12.9:1. The selected filter
+   on Work matches. */
+.btn {
+  display: inline-flex; align-items: center; justify-content: space-between; gap: 2.5rem; font-family: var(--font-ui);
+  padding: 0.85rem 1.1rem; border: 1px solid var(--ink-nong); border-radius: 12px;
+  background: var(--ink-nong); color: var(--n-50);
+  font-size: 0.9375rem; font-weight: 500; text-decoration: none; cursor: pointer;
+  transition: background 250ms, border-color 250ms, color 250ms;
+}
+.btn::after { content: "→"; transition: transform 300ms var(--ease-out); }
+.btn:hover { background: var(--accent); border-color: var(--accent); color: var(--white); }
+.btn:hover::after { transform: translateX(4px); }
+/* A link that leaves the site points up and out. */
+.btn--external::after { content: "↗"; }
+.btn--external:hover::after { transform: translate(2px, -2px); }
+/* A button that acts in place goes nowhere, so no arrow. */
+.btn--action::after { content: none; }
+.btn--light { border-color: var(--n-50); background: var(--n-50); color: var(--n-900); }
+.btn--ghost { background: transparent; color: var(--text); border-color: var(--line); }
+.btn--ghost:hover { border-color: var(--accent); background: transparent; color: var(--accent); }
+.link-arrow {
+  display: inline-flex; align-items: center; gap: 0.75rem; font-family: var(--font-ui);
+  font-size: 0.9375rem; font-weight: 500; text-decoration: none; transition: color 200ms;
+}
+.link-arrow::after {
+  content: "→"; display: grid; place-items: center; width: 1.75rem; height: 1.75rem;
+  border: 1px solid var(--line); border-radius: 50%; font-size: 0.75rem;
+  transition: background 200ms, color 200ms, border-color 200ms;
+}
+.link-arrow:hover { color: var(--accent); }
+.link-arrow:hover::after { background: var(--accent); color: var(--white); border-color: var(--accent); }
+.link-arrow--external::after { content: "↗"; }
+
+/* ---------- Header: floating pill ---------- */
+.site-header { position: fixed; inset: 1rem 0 auto; z-index: 50; display: flex; justify-content: center; pointer-events: none; }
+.pill {
+  position: relative; display: flex; align-items: center; justify-content: space-between; gap: 2.5rem; font-family: var(--font-ui);
+  min-width: min(20rem, calc(100vw - 2rem)); padding: 0.4rem 0.4rem 0.4rem 1.25rem;
+  border-radius: 20px; background: rgb(255 255 255 / 0.82); box-shadow: var(--shadow-float);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  pointer-events: auto;
+}
+.pill__brand { display: inline-flex; align-items: center; gap: 0.55rem; font-weight: 600; font-size: 1rem; letter-spacing: -0.01em; text-decoration: none; color: var(--ink-jiao); }
+.pill__brand::before { content: ""; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--accent); }
+.pill__links { display: flex; gap: 0.25rem; list-style: none; }
+.pill__links a {
+  display: block; padding: 0.55rem 0.8rem; border-radius: 12px;
+  color: var(--n-700); font-size: 0.9375rem; font-weight: 500; text-decoration: none;
+  transition: background 200ms, color 200ms;
+}
+.pill__links a:hover { color: var(--accent); }
+.pill__links a[aria-current] { background: var(--n-100); color: var(--n-900); }
+.pill__toggle {
+  position: relative; display: none; place-items: center; width: 2.5rem; height: 2.5rem;
+  border: 0; border-radius: 12px; background: transparent; cursor: pointer;
+}
+.dots { display: grid; grid-template-columns: repeat(2, 6px); gap: 3px; transition: opacity 200ms, transform 300ms var(--ease-out); }
+.dots i { width: 6px; height: 6px; border-radius: 1.5px; background: var(--n-900); }
+/* Open state: the dot grid gives way to a close ×. */
+.pill__toggle::before, .pill__toggle::after {
+  content: ""; position: absolute; inset: 0; width: 16px; height: 1.5px; margin: auto;
+  background: var(--n-900); opacity: 0; transition: opacity 200ms, transform 300ms var(--ease-out);
+}
+.pill.is-open .dots { opacity: 0; transform: scale(0.6); }
+.pill.is-open .pill__toggle::before { opacity: 1; transform: rotate(45deg); }
+.pill.is-open .pill__toggle::after { opacity: 1; transform: rotate(-45deg); }
+.progress { position: absolute; inset: auto 1.25rem 0; height: 2px; overflow: hidden; border-radius: 2px; }
+.progress span { display: block; height: 100%; background: var(--accent); transform: scaleX(0); transform-origin: left; }
+
+@media (max-width: 47.99rem) {
+  .js .pill__toggle { display: grid; }
+  .js .pill__links {
+    position: absolute; inset: calc(100% + 0.5rem) 0 auto; flex-direction: column;
+    padding: 0.5rem; border-radius: 20px; background: var(--white); box-shadow: var(--shadow-float);
+    opacity: 0; transform: translateY(-6px); visibility: hidden;
+    transition: opacity 200ms, transform 300ms var(--ease-out), visibility 0s 300ms;
+  }
+  .js .pill.is-open .pill__links { opacity: 1; transform: none; visibility: visible; transition-delay: 0s; }
+  .pill__links a { padding: 0.85rem 1rem; font-size: 1.0625rem; }
+  html:not(.js) .pill { flex-wrap: wrap; gap: 0.5rem; }
+}
+
+/* ---------- Home hero: the name over an ink wave ---------- */
+/* After Alta's hero (Louisa, 2026-10-11: "Make the home screen follow this
+   visual"). As tall as its content, with one moderate gap between the
+   name and the facts (Louisa, 2026-10-11: "way too much gap between
+   Louisa Lyu and the education part"). The gap and the top space are a
+   little tighter than the other pages', so the facts show on a laptop's
+   first screen under the larger name (Louisa, 2026-10-12: "move the what i
+   do, education, and based in parts up a bit"). The lower corners round like
+   the footer's panel.
+   --soft is how far the wave's edge spreads; --bleed lets the wave run past
+   the sides and bottom, so the softening never fades its edges. */
+.hero {
+  --soft: clamp(1.25rem, 2.2vw, 2rem);
+  --bleed: calc(var(--soft) * 3);
+  position: relative; overflow: hidden;
+  display: grid; row-gap: clamp(2rem, 3.5vw, 3rem);
+  padding-block: clamp(6rem, 10vw, 8.5rem) clamp(1.5rem, 3vw, 2.75rem);
+  border-radius: 0 0 var(--r-xl) var(--r-xl);
+}
+/* Home only: the name is Louisa's own lettering (src/assets/title-name.svg),
+   drawn in the text colour so it takes the blending below; the facts are in
+   Switzer (Louisa, 2026-10-11). The tagline is no longer on Home; "What I do"
+   joined the facts instead. The lettering is taller than the typed name was,
+   so it fills the space the tagline left. */
+/* Half as large again as before (Louisa, 2026-10-12: "150% compared to that
+   of now"), never wider than the column on phones. */
+/* Stretched 20% wider at the same height (Louisa, 2026-10-15): the box is
+   1.2 times wider and the lettering fills it (preserveAspectRatio="none").
+   On phones it keeps the column's width and is 1.2 times shorter instead.
+   The ratio is the drawing's viewBox (1574 × 977) with its width × 1.2. */
+.hero__title { width: min(100%, clamp(27rem, 54vw, 48.6rem)); margin-inline: auto; }
+.hero__name { width: 100%; height: auto; aspect-ratio: 1888.8 / 977; }
+/* The name and the facts are centred (Louisa, 2026-10-11: "center the text
+   in the hero page"). */
+.hero__heading { text-align: center; }
+/* The name changes colour with what is behind it, as in Alta (Louisa,
+   2026-10-11: "make the font color dynamic like the one shown"): difference
+   blending prints each pixel as the distance between the text colour and the
+   backdrop. This colour is the paper (#f3f3f1) minus 焦墨, so on paper the
+   name prints in exactly that ink, on the wave it turns light, and letters
+   on the wave's soft edge shade from one to the other. */
+.hero__heading { --text-strong: #dddbd6; mix-blend-mode: difference; }
+/* Under the text, above the paper and its hairlines. The wave fades in more
+   slowly than the text, like ink settling. */
+.hero__wave, .hero__grain { position: absolute; z-index: -1; pointer-events: none; }
+.hero__wave { --dur: 2000ms; inset: 0 calc(-1 * var(--bleed)) calc(-1 * var(--bleed)); }
+.hero__wave-art { position: absolute; inset: 0; width: 100%; height: 100%; filter: blur(var(--soft)); }
+.hero__wave-art--medium, .hero__wave-art--wide { display: none; }
+@media (min-width: 48rem) {
+  .hero__wave-art--narrow { display: none; }
+  .hero__wave-art--medium { display: block; }
+}
+@media (min-width: 64rem) {
+  .hero__wave-art--medium { display: none; }
+  .hero__wave-art--wide { display: block; }
+}
+/* The grain: grey noise drawn by the browser (an inline SVG, which, unlike a
+   background image, never counts as the page's main content for speed
+   scores), overlaid so it shows most where the ink thins to paper, as in
+   Alta, and hardly at all on bare paper. Its greys centre on mid grey, so the
+   overlay keeps the average tone. It fades in at the top of the ground, so no
+   line shows where it starts. */
+.hero__grain {
+  inset: 0; width: 100%; height: 100%; opacity: 0.6; mix-blend-mode: overlay;
+  -webkit-mask-image: linear-gradient(transparent, #000 4rem);
+  mask-image: linear-gradient(transparent, #000 4rem);
+}
+/* Forced colours replace the text colours, so the ink would hide them and
+   the blending would wash them out. */
+@media (forced-colors: active) {
+  .hero__wave, .hero__grain { display: none; }
+  .hero__heading { mix-blend-mode: normal; }
+}
+/* The facts sit on solid ink. It lightens toward the bottom, so they take the
+   next lighter tone of each role to keep AA contrast on it. */
+.hero__foot { --text: var(--inverse-text-strong); --text-2: var(--inverse-text-3); display: grid; font-family: var(--font-ui); }
+.hero__facts { display: grid; gap: 1rem; margin: 0; text-align: center; }
+.hero__facts dt { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-2); }
+.hero__facts dd { margin: 0.3rem 0 0; font-size: 0.9375rem; }
+/* Wider screens: the facts side by side, centred as a group. */
+@media (min-width: 48rem) { .hero__facts { display: flex; justify-content: center; gap: 1rem clamp(3rem, 6vw, 5rem); } }
+
+/* ---------- Scroll cue ---------- */
+/* A thin arrow centred in the space between the hero and Selected work. It
+   takes no height of its own, so that space stays the one section gap. */
+.scroll-cue { position: relative; height: 0; color: var(--ink-jiao); pointer-events: none; }
+.scroll-cue svg { position: absolute; left: 50%; top: calc(var(--section) / 2); width: 14px; transform: translate(-50%, -50%); }
+
+/* ---------- Section heads ---------- */
+/* On wide screens the twelve-column grids below have no column gap, so
+   columns 4, 7 and 10 start exactly on the hairlines (Louisa, 2026-10-11);
+   padding keeps neighbouring items apart instead. */
+.section-head { display: grid; gap: 1.25rem; margin-bottom: clamp(2.5rem, 4vw, 3.5rem); }
+.section-head__title { font-size: var(--step-4); line-height: 1.06; }
+.section-head__aside { max-width: 22rem; margin: 0; color: var(--text-3); font-size: 0.9375rem; }
+@media (min-width: 64rem) {
+  .section-head { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 0; align-items: end; }
+  .section-head__title { grid-column: 1 / 10; padding-right: 2rem; }
+  .section-head__aside { grid-column: 10 / 13; }
+}
+
+/* ---------- Project cards ---------- */
+/* Home: the selected projects sit in one row that scrolls sideways (Louisa,
+   2026-10-10). The next card peeks in, and a thin ink scrollbar runs under the
+   row. The 10px padding keeps the crop marks inside the scroll area.
+   --card-w is a card's width and --card-h its image's height, both from the
+   carousel's own width, so the arrows can centre on the images. */
+.work-carousel { position: relative; container-type: inline-size; --card-w: 82cqi; --card-h: calc(var(--card-w) * 4 / 5); }
+.work-scroll {
+  display: grid; grid-auto-flow: column; grid-auto-columns: var(--card-w); gap: clamp(1rem, 2.4vw, 2rem);
+  margin-inline: -10px; padding: 10px 10px 1.25rem;
+  overflow-x: auto; overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory; scroll-padding-inline: 10px;
+  scrollbar-width: thin; scrollbar-color: var(--ink-dan) var(--line);
+}
+.work-scroll > .card { scroll-snap-align: start; }
+/* With a mouse the row also drags sideways (site.ts), and it moves freely:
+   it rests wherever a glide or a scroll stops, not on a card (Louisa,
+   2026-10-12: "make the glide free"). Touch screens keep snapping to a card.
+   The hand shows between the cards; the cards keep the link pointer, since a
+   click still opens them. */
+@media (hover: hover) and (pointer: fine) {
+  .work-scroll { scroll-snap-type: none; }
+  html.js .work-scroll { cursor: grab; }
+}
+.work-scroll.is-gliding { scroll-snap-type: none; }
+.work-scroll.is-dragging { scroll-snap-type: none; user-select: none; }
+.work-scroll.is-dragging, .work-scroll.is-dragging * { cursor: grabbing; }
+/* The arrows float like the header pill, centred on the images, and fade
+   out when there is nothing more that way. */
+.work-arrow {
+  position: absolute; z-index: 1; top: calc(10px + var(--card-h) / 2); translate: 0 -50%;
+  display: grid; place-items: center; width: 3rem; height: 3rem; padding: 0;
+  border: 0; border-radius: 50%; background: rgb(255 255 255 / 0.82); box-shadow: var(--shadow-float);
+  color: var(--ink-jiao); cursor: pointer;
+  transition: opacity 400ms, visibility 400ms, background 200ms, color 200ms;
+}
+.work-arrow[hidden] { display: none; }
+.work-arrow svg { width: 1.125rem; height: 1.125rem; }
+.work-arrow--prev { left: clamp(0.5rem, 1.5vw, 1rem); }
+.work-arrow--next { right: clamp(0.5rem, 1.5vw, 1rem); }
+.work-arrow:hover { background: var(--accent); color: var(--white); }
+.work-arrow:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.work-arrow.is-off { opacity: 0; visibility: hidden; }
+.work-scroll:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: var(--r-md); }
+/* The title and category sit under the image in ink, so they read the same on
+   any cover, light or dark (Louisa, 2026-10-10). */
+.card__link { display: block; color: var(--text-strong); text-decoration: none; }
+.card__media { position: relative; overflow: hidden; aspect-ratio: 5 / 4; border-radius: var(--r-md); }
+.card__media picture { height: 100%; }
+.card__img { width: 100%; height: 100%; object-fit: cover; transition: filter 600ms var(--ease-out); }
+a.card__link:hover .card__img { filter: brightness(1.06); }
+.card__title { margin: 0; color: var(--text-strong); font-family: var(--font-display); font-size: var(--step-2); font-weight: 520; letter-spacing: -0.01em; }
+.card__meta { margin: 0; color: var(--text-2); }
+.card__icon {
+  position: absolute; right: 1rem; bottom: 1.25rem; display: grid; place-items: center;
+  width: 2rem; height: 2rem; border-radius: 9px; background: var(--white); color: var(--n-900);
+  font-size: 0.875rem; transition: background 400ms, color 400ms;
+}
+a.card__link:hover .card__icon { background: var(--accent); color: var(--white); }
+/* The year stays beside the title's first line, however long the title. */
+.card__caption { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin: 0.9rem 0 0; color: var(--text-2); }
+.card__caption .card__title { min-width: 0; }
+.card__caption .card__meta { flex: none; }
+/* "See all work" sits at the row's right edge (Louisa, 2026-10-12). */
+.work-more { display: flex; justify-content: flex-end; margin-top: 2rem; }
+@media (min-width: 48rem) {
+  .work-carousel { --card-w: calc((100cqi - 2rem) / 2.2); --card-h: calc(var(--card-w) * 3 / 4); }
+  .card__media { aspect-ratio: 4 / 3; }
+}
+@media (min-width: 64rem) {
+  .work-carousel { --card-w: calc((100cqi - 4rem) / 2.6); }
+}
+
+
+/* ---------- Call to action ---------- */
+.cta__title { font-size: var(--step-5); margin: 0 0 2.5rem; }
+.cta__row { display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem 2.5rem; }
+/* Home's call to action: each line of the heading and the button are centred
+   on the page (Louisa, 2026-10-13: "truly center aligned").
+   Scoped to .cta: the 404 page reuses .cta__row and stays at the left. */
+.cta__inner { text-align: center; }
+.cta__inner .cta__row { justify-content: center; }
+
+/* ---------- Footer ---------- */
+.site-footer { margin: var(--section) var(--edge) var(--edge); padding-top: clamp(2.5rem, 5vw, 4.5rem); overflow: hidden; border-radius: var(--r-xl); font-family: var(--font-ui); }
+/* The wordmark is sized from the footer's own width (container units), so the
+   whole name always fits. The panel is inset by --edge, so its container
+   gives that back: the footer's content starts and ends on the page's own
+   column at every width (Louisa, 2026-10-12). */
+.site-footer > .container {
+  container-type: inline-size;
+  max-width: calc(var(--max) - 2 * var(--edge)); padding-inline: calc(var(--gutter) - var(--edge));
+}
+.site-footer__grid { display: grid; gap: 2.5rem; }
+.site-footer__lead { margin: 1rem 0 1.5rem; font-family: var(--font-display); font-size: var(--step-3); font-weight: calc(520 + var(--wght-adjust)); letter-spacing: -0.02em; line-height: 1.1; max-width: 22ch; }
+.site-footer__link { font-size: var(--step-1); }
+.site-footer__link:hover { color: var(--accent); }
+.site-footer ul { display: grid; gap: 0.5rem; list-style: none; }
+/* The email with the links under it, all in the email's type (Louisa,
+   2026-10-13). */
+.site-footer__contact { display: grid; justify-items: start; gap: 0.5rem; }
+.site-footer__small { color: var(--text-2); margin: 0; }
+/* "Louisa" across the full width (Louisa, 2026-10-11: "Maybe just use louisa").
+   The divisor is the word's width in em, measured in Switzer. Its text box
+   reaches up over the links above it on wide screens, so it lets clicks
+   pass through (it is decoration only). */
+.site-footer__wordmark {
+  margin: clamp(2.5rem, 5vw, 4.5rem) 0 -0.16em; font-family: var(--font-display);
+  font-size: calc(100cqi / 2.72); font-weight: 600; letter-spacing: -0.06em; line-height: 0.8;
+  white-space: nowrap; user-select: none; pointer-events: none;
+}
+/* Wide screens: the email and links take the first half, on the first
+   hairline, and the copyright ends on the right edge, on the email's line
+   (sharing its baseline, Louisa, 2026-10-13). */
+@media (min-width: 64rem) {
+  .site-footer__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 0; align-items: baseline; }
+  .site-footer__grid > * { grid-row: 1; }
+  .site-footer__contact { grid-column: 1 / 3; }
+  .site-footer__small { grid-column: 4; justify-self: end; }
+}
+
+/* ---------- Page heroes (inner pages) ---------- */
+.page-hero { padding-top: clamp(7rem, 12vw, 10rem); padding-bottom: clamp(2.5rem, 5vw, 4rem); display: grid; gap: 1.5rem; }
+.page-hero__title { font-size: var(--step-5); }
+.page-hero__aside { max-width: 24rem; margin: 0; color: var(--text-3); }
+@media (min-width: 64rem) {
+  .page-hero { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 2rem; align-items: end; }
+  .page-hero__title { grid-column: 1 / 11; }
+  .page-hero__aside { grid-column: 1 / 6; }
+}
+/* About: the four facts are one block on the title's row, in the right half
+   and centred on the title (Louisa, 2026-10-13), so their two columns start
+   on the last two hairlines. Narrower screens set them under the title. */
+.page-hero--about { row-gap: 2.5rem; }
+@media (min-width: 64rem) {
+  .page-hero--about { column-gap: 0; align-items: center; }
+  .page-hero--about .page-hero__title { grid-column: 1 / 7; grid-row: 1; }
+  .page-hero--about .page-hero__facts { grid-column: 7 / 13; grid-row: 1; }
+}
+
+/* ---------- Work index ---------- */
+.filters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+html:not(.js) .filters { display: none; }
+.filter {
+  padding: 0.5rem 0.9rem; border: 1px solid var(--line); border-radius: var(--r-pill); font-family: var(--font-ui);
+  background: transparent; font-size: 0.875rem; cursor: pointer; transition: background 200ms, color 200ms, border-color 200ms;
+}
+.filter sup { margin-left: 0.25rem; font-family: var(--font-mono); color: var(--text-2); }
+.filter:hover { border-color: var(--accent); color: var(--accent); }
+.filter[aria-pressed="true"] { background: var(--ink-nong); border-color: var(--ink-nong); color: var(--n-50); }
+.filter[aria-pressed="true"] sup { color: var(--n-300); }
+/* Phones: the filters sit on one row that swipes, running to the screen's
+   edges, so the projects start sooner (Louisa, 2026-10-11). The padding leaves
+   room for focus rings. */
+@media (max-width: 47.99rem) {
+  .filters {
+    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none;
+    margin: -6px calc(-1 * var(--gutter)) calc(1.5rem - 6px); padding: 6px var(--gutter);
+  }
+  .filters::-webkit-scrollbar { display: none; }
+  .filter { flex: none; }
+}
+.work-list { list-style: none; border-top: 1px solid var(--line); }
+.work-row { border-bottom: 1px solid var(--line); }
+/* Narrow screens: the title comes first and the cover image under it (Louisa,
+   2026-10-11). The year sits on the title's first line, and the arrow is left
+   out (the whole row is the link). */
+.work-row__link {
+  display: grid; grid-template-columns: 1fr auto; gap: 1rem 1.5rem; align-items: baseline;
+  padding-block: 1.25rem; text-decoration: none; color: inherit;
+}
+.work-row__thumb { grid-column: 1 / -1; grid-row: 2; overflow: hidden; border-radius: var(--r-sm); }
+.work-row__thumb img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+.work-row__title { font-family: var(--font-display); font-size: var(--step-3); font-weight: calc(var(--heading-wght) - 40); letter-spacing: -0.02em; line-height: 1.1; transition: color 200ms; }
+.work-row__text { display: grid; gap: 0.45rem; }
+.work-row__title { margin-bottom: 0.2rem; }
+/* The skills and the tools under each title, each after its small label;
+   longer lists wrap under their own column. */
+.work-row__line { display: grid; grid-template-columns: 4.25rem minmax(0, 1fr); align-items: baseline; color: var(--text-2); font-size: 0.875rem; }
+.work-row__meta { color: var(--text-2); font-family: var(--font-ui); }
+.work-row__arrow { display: none; place-items: center; width: 2.5rem; height: 2.5rem; border: 1px solid var(--line); border-radius: 50%; transition: background 200ms, color 200ms, border-color 200ms, transform 300ms var(--ease-out); }
+a.work-row__link:hover .work-row__title { color: var(--accent); }
+a.work-row__link:hover .work-row__arrow { background: var(--accent); border-color: var(--accent); color: var(--white); }
+/* Wide screens: the thumbnail fills the first column, so every title starts
+   on the second hairline. */
+@media (min-width: 64rem) {
+  .work-row__link { grid-template-columns: calc(25% - 2rem) minmax(0, 1fr) auto 2.5rem; gap: 2rem; align-items: center; padding-block: 1.5rem; }
+  .work-row__thumb { grid-column: auto; grid-row: auto; }
+  .work-row__arrow { display: grid; }
+}
+
+/* ---------- Project page ---------- */
+.project-hero { padding-top: clamp(7rem, 12vw, 10rem); }
+.project-hero__title { font-size: var(--step-5); margin-bottom: clamp(1.5rem, 3vw, 2.25rem); }
+.project-meta {
+  display: grid; grid-template-columns: 1fr auto; gap: 1.5rem;
+  padding-top: 0.9rem; border-top: 1px solid var(--line); color: var(--text);
+}
+.project-meta span:last-child { color: var(--text-2); }
+@media (min-width: 64rem) { .project-hero__inner { margin-left: calc(3 / 12 * 100%); } }
+.project-cover { margin-top: clamp(1.5rem, 3vw, 2.5rem); }
+.project-cover img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--r-md); }
+@media (min-width: 48rem) { .project-cover img { aspect-ratio: 16 / 9; } }
+/* Wide screens: a shorter cover, and never most of the screen, so the
+   description is not far below the fold on laptops. */
+@media (min-width: 64rem) { .project-cover img { aspect-ratio: 2 / 1; max-height: 70svh; } }
+
+.project-intro { display: grid; gap: 2.5rem; padding-block: var(--section); }
+.project-intro__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+/* The intro, first under the cover (Louisa, 2026-10-12). */
+.project-intro__lead { margin: 1rem 0 2rem; font-size: var(--step-1); line-height: 1.55; max-width: 34rem; }
+/* Two columns with no gap, so the second starts halfway (a hairline on wide
+   blocks); padding keeps the text apart. */
+.facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.75rem 0; margin: 0; }
+.facts > div { padding-right: 1.5rem; }
+/* Phones: longer facts (dates, tools, skills; program, focus) take the full width. */
+@media (max-width: 47.99rem) { .facts > .facts__wide { grid-column: 1 / -1; } }
+.facts dt { color: var(--text-2); font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.facts dd { margin: 0.4rem 0 0; font-weight: 500; }
+@media (min-width: 64rem) {
+  .project-intro { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 0; }
+  .project-intro__text { grid-column: 1 / 7; padding-right: 2rem; }
+  .project-intro__facts { grid-column: 7 / 13; align-self: start; padding-top: 2rem; }
+}
+
+.process { padding-bottom: var(--section); scroll-margin-top: 5rem; }
+.process__head { padding-top: 0.9rem; border-top: 1px solid var(--line); margin-bottom: 1rem; }
+.process__row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 1rem 3rem; font-family: var(--font-ui); }
+.process__index { display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; }
+.process__index a {
+  display: block; padding: 0.4rem 0.75rem; border: 1px solid var(--line); border-radius: var(--r-pill);
+  color: var(--text-2); font-size: 0.8125rem; text-decoration: none; white-space: nowrap;
+  transition: color 200ms, border-color 200ms, background 200ms;
+}
+.process__index a:hover { color: var(--accent); border-color: var(--accent); }
+/* The section being read, filled like the Work filter's chosen category. */
+.process__index a[aria-current] { background: var(--n-900); border-color: var(--n-900); color: var(--n-50); }
+/* With the script, the index stays pinned below the header while the process
+   is read (Louisa, 2026-10-10), on one row that swipes when it is wider than
+   the screen. Its paper carries the grid's hairlines, so they run on unbroken. */
+.js .process__head {
+  --paper: linear-gradient(90deg, var(--grid-line) 1px, transparent 1px) 0 0 / 25% 100%,
+    linear-gradient(270deg, var(--grid-line) 1px, transparent 1px), var(--bg);
+  position: sticky; top: 5rem; z-index: 40;
+  padding-bottom: 0.75rem; margin-bottom: 0.25rem; background: var(--paper);
+}
+/* The padding leaves room for focus rings; the row still ends at the rules. */
+.js .process__row { flex-wrap: nowrap; margin-block: -6px; padding: 6px 6px 6px 0; overflow-x: auto; scrollbar-width: none; }
+.js .process__row::-webkit-scrollbar { display: none; }
+.js .process__row > span, .js .process__index li { flex: none; }
+.js .process__index { flex-wrap: nowrap; }
+/* Wide screens: "Process" fills the first column, so the section links start
+   on the second hairline, above the text column. */
+@media (min-width: 64rem) {
+  .process__row > span { flex: 0 0 calc(25% - 3rem); }
+  /* With the script the row has 6px of padding on the right (above). */
+  .js .process__row > span { flex: 0 0 calc((100% + 6px) / 4 - 3rem); }
+}
+/* Pinned: a rule below, and paper up to the top of the window, so the text
+   slips out of sight under the header. */
+.process__head.is-stuck { box-shadow: inset 0 -1px 0 var(--line); }
+.process__head.is-stuck::before { content: ""; position: absolute; inset: auto 0 calc(100% + 1px); height: 5rem; background: var(--paper); }
+.process__body { display: grid; }
+.process__body > h2 {
+  position: relative; margin-top: 3rem; padding-top: 1.25rem; scroll-margin-top: 11rem;
+  font-family: var(--font-display); font-size: var(--step-2); font-weight: calc(var(--heading-wght) - 40); letter-spacing: -0.01em;
+}
+.process__body > h2::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 1px; background: var(--line); }
+.process__body > p { margin: 1rem 0 0; color: var(--text-3); max-width: var(--measure); }
+/* Findings inside Method: one ### each, in the text column, so the left
+   column only names the sections (Louisa, 2026-10-12: "by finding only"). */
+.process__body > h3 {
+  margin: 2.5rem 0 0; max-width: var(--measure); color: var(--text-strong);
+  font-family: var(--font-display); font-size: var(--step-1); font-weight: 500; line-height: 1.35;
+}
+.process__body > h2 + h3 { margin-top: 1.5rem; }
+.process__body > h3 + p { margin-top: 0.75rem; }
+/* Wide screens: headings in the first hairline column, everything else from
+   the second hairline on. */
+@media (min-width: 64rem) {
+  .process__body { grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); }
+  .process__body > * { grid-column: 2; }
+  .process__body > h2 { grid-column: 1; padding-right: 2rem; }
+  .process__body > h2::before { width: 400%; }
+  .process__body > h2 + p, .process__body > h2 + h3 { margin-top: 3rem; padding-top: 1.25rem; }
+  .process__body > h3 { margin-top: 3.5rem; }
+  .process__body > .figure, .process__body > .gallery { grid-column: 1 / -1; }
+  /* Diagrams are read like text, so they sit in the text column, as do small
+     clips that would blur if stretched to the full width. */
+  .process__body > .figure--diagram, .process__body > .figure--text { grid-column: 2; }
+}
+
+.figure { margin: 2rem 0 0; }
+.figure__media { position: relative; overflow: hidden; border-radius: var(--r-md); }
+.figure__media img, .figure__media video { width: 100%; }
+/* Full screen puts the video on the browser’s black backdrop, where multiply
+   would turn the whole clip black, so there it plays unblended. */
+.figure__media video:fullscreen { mix-blend-mode: normal; }
+.figure__media video:-webkit-full-screen { mix-blend-mode: normal; }
+.figure figcaption { margin-top: 0.75rem; color: var(--text-2); font-size: 0.875rem; }
+/* A clip is never taller than the screen below the pinned bars, so it can be
+   watched whole (Louisa, 2026-10-11). --ar is its width over its height, and
+   --max-w the cap for small clips (both set by Video.astro). */
+.figure--video { max-width: min(var(--max-w, 100%), calc((100svh - 12rem) * var(--ar, 1.7778))); }
+/* Video: the poster lies over the clip and the whole of it is the play button;
+   the browser's controls take over once it plays. Without the script, the
+   video shows with the browser's controls and no poster. */
+.figure__poster { position: absolute; inset: 0; }
+.figure__poster img { height: 100%; object-fit: cover; }
+html:not(.js) .figure__poster { display: none; }
+.figure__play {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  padding: 0; border: 0; border-radius: inherit; background: transparent; cursor: pointer;
+}
+.figure__play[hidden] { display: none; }
+.figure__play:focus-visible { outline-offset: -6px; }
+.figure__play span {
+  display: grid; place-items: center; width: 4rem; height: 4rem; border-radius: 50%;
+  background: var(--white); color: var(--n-900); transition: background 250ms, color 250ms;
+}
+.figure__play svg { width: 1.125rem; }
+.figure__play:hover span { background: var(--accent); color: var(--white); }
+/* SVG diagrams draw straight onto the paper in the ink tones: currentColor is
+   the body ink, and an ink-* class on a shape or group picks another strength. */
+.figure--diagram svg { color: var(--ink-nong); }
+.figure--diagram .ink-jiao { color: var(--ink-jiao); }
+.figure--diagram .ink-nong { color: var(--ink-nong); }
+.figure--diagram .ink-zhong { color: var(--ink-zhong); }
+.figure--diagram .ink-dan { color: var(--ink-dan); }
+.figure--diagram .ink-qing { color: var(--ink-qing); }
+.figure--diagram .ink-accent { color: var(--accent); }
+/* A figure's `narrow` version replaces it when the figure has less than 46rem of
+   room, where a 960 px diagram would shrink its 16 px text below 12 px. */
+.figure__media--swap { container-type: inline-size; }
+.figure__narrow { display: none; }
+@container (max-width: 45.99rem) {
+  .figure__wide { display: none; }
+  .figure__narrow { display: block; }
+}
+/* Steps (not used on a page since Method went by finding, 2026-10-12).
+   Iterations: each version is a step on one thin ink line, so the order reads
+   at a glance (Louisa, 2026-10-11). The dot of the final version is filled. On
+   wide screens a step's title sits in the left column, its text in the text
+   column (lined up with the sections around it) and its visuals across both.
+   Steps sit closer together than the sections around them. */
+.steps { --rail: 1.75rem; --dot: 11px; --mid: calc(var(--step-1) * 0.7); margin: 1.75rem 0 0; padding: 0 0 0 var(--rail); list-style: none; }
+.step { position: relative; padding-bottom: clamp(2rem, 3vw, 2.5rem); }
+.step:last-child { padding-bottom: 0; }
+.step::before { content: ""; position: absolute; top: var(--mid); left: calc(var(--dot) / 2 - var(--rail)); width: 1px; height: 100%; background: var(--line); }
+.step:last-child::before { display: none; }
+.step::after {
+  content: ""; position: absolute; top: calc(var(--mid) - var(--dot) / 2); left: calc(0.5px - var(--rail));
+  width: var(--dot); height: var(--dot); border: 1px solid var(--ink-dan); border-radius: 50%; background: var(--bg);
+}
+.step:last-child::after { border-color: var(--ink-nong); background: var(--ink-nong); }
+.step__title { margin: 0; color: var(--text-strong); font-family: var(--font-display); font-size: var(--step-1); font-weight: 500; line-height: 1.4; }
+.step > p { margin: 1rem 0 0; color: var(--text-3); max-width: var(--measure); }
+.step > .figure, .step > .gallery { margin-top: 1.75rem; }
+@media (min-width: 64rem) {
+  .process__body > .steps { grid-column: 1 / -1; margin-top: 2.5rem; }
+  .step {
+    display: grid; align-content: start;
+    grid-template-columns: calc((100% + var(--rail)) / 4 - var(--rail)) minmax(0, 1fr);
+  }
+  .step > * { grid-column: 2; }
+  .step > .step__title { grid-column: 1; grid-row: 1; padding-right: 2rem; }
+  .step > .step__title + p { margin-top: 0; }
+  .step > .figure, .step > .gallery { grid-column: 1 / -1; }
+  .step > .figure--text { grid-column: 2; }
+}
+
+.gallery { display: grid; gap: clamp(0.75rem, 1.4vw, 1rem); margin-top: 2rem; }
+.gallery .figure { margin: 0; }
+/* Side by side, each figure is as wide as its shape asks (--ar, width over
+   height, set by Figure.astro and Video.astro), so every image in a row has
+   the same height and the captions line up (Louisa, 2026-10-11). */
+@media (min-width: 40rem) {
+  .gallery { display: flex; align-items: flex-start; }
+  .gallery > .figure { flex: var(--ar, 1) 1 0; min-width: 0; max-width: none; }
+}
+
+/* Next project: only its button, at the left like every other page link; the
+   process (or the intro) above supplies the space. */
+
+/* ---------- About ---------- */
+/* No space of its own below: the section that follows supplies it. */
+.about-intro { display: grid; gap: 2rem; }
+.about-intro__portrait { margin: 0; }
+.about-intro__portrait img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: var(--r-md); }
+@media (min-width: 64rem) {
+  .about-intro { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 0; }
+  .about-intro__portrait { grid-column: 1 / 6; }
+}
+.philosophy { display: grid; gap: 2rem; }
+/* The design philosophy is centred on the page, its heading half the usual
+   size (Louisa, 2026-10-13). The text runs about 13% wider than other reading
+   text, about 74 characters a line in Source Serif 4: Louisa asked for 20–30%,
+   but that would pass 75 characters, our upper limit for "standard line
+   lengths" (the course's Format criterion names no number). */
+.section-head--centre { text-align: center; }
+.section-head--centre .section-head__title { grid-column: 1 / -1; padding-right: 0; font-size: calc(var(--step-4) / 2); }
+.philosophy__text { --measure: 68ch; width: 100%; margin-inline: auto; }
+.philosophy__text p { color: var(--text-3); }
+.philosophy__text .philosophy__lead { color: var(--text-strong); font-family: var(--font-display); font-size: var(--step-3); font-weight: calc(520 + var(--wght-adjust)); letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 2rem; }
+@media (min-width: 64rem) {
+  .philosophy { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 0; }
+  .philosophy__text { grid-column: 1 / -1; }
+}
+/* Skills and tools: three ruled lists, like an index, each under a small label
+   (Skills, then Code for languages and libraries, then Tools). Their columns
+   start on the hairlines: the skills take two columns, code and tools one
+   each (Louisa, 2026-10-11: "specific language / tools may also be
+   important"). A margin keeps each column's rules apart. */
+/* Phones: the skills in one column, then code and tools side by side. */
+.toolkit { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 2.5rem; }
+.toolkit__group--wide { grid-column: 1 / -1; }
+.toolkit .label { margin-bottom: 0.9rem; }
+.toolkit__group--wide + .toolkit__group .skill { margin-right: 2rem; }
+.skills { display: grid; list-style: none; }
+.skill { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding-block: 1.1rem; border-top: 1px solid var(--line); }
+.skill__level { color: var(--text-2); font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; }
+@media (min-width: 40rem) {
+  .toolkit__group--wide .skills { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .toolkit__group--wide .skill:nth-child(odd) { margin-right: 2rem; }
+}
+@media (min-width: 64rem) {
+  .toolkit { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .toolkit__group--wide { grid-column: span 2; }
+  .toolkit__group--wide .skill { margin-right: 2rem; }
+}
+.rows { list-style: none; border-top: 1px solid var(--line); margin-bottom: 2.5rem; }
+.row { display: grid; gap: 0.5rem 2rem; padding-block: 1.5rem; border-bottom: 1px solid var(--line); }
+.row__title { font-family: var(--font-display); font-size: var(--step-2); font-weight: calc(var(--heading-wght) - 40); letter-spacing: -0.01em; }
+.row__meta { color: var(--text-2); }
+@media (min-width: 64rem) {
+  .row { grid-template-columns: 9fr 3fr; align-items: baseline; }
+  .row__meta { text-align: right; }
+}
+
+/* ---------- Contact ---------- */
+/* Contact: ruled columns on the paper, no boxes. The footer's margin is the
+   space below it. */
+.contact-list { display: grid; }
+.contact-item { display: flex; flex-direction: column; gap: 1.5rem; padding-block: 1.25rem 2.5rem; border-top: 1px solid var(--line); }
+.contact-item p { margin: 0; }
+/* The email is set like the LinkedIn link beside it (Louisa, 2026-10-13), and
+   as tall as that link's round arrow, so the two rows line up. */
+.contact-item__email {
+  display: flex; align-items: center; align-self: flex-start; min-height: 1.75rem;
+  font-family: var(--font-ui); font-size: 0.9375rem; font-weight: 500;
+  overflow-wrap: anywhere; text-decoration: none; transition: color 200ms;
+}
+.contact-item__email:hover { color: var(--accent); }
+.contact-item ul { display: grid; gap: 0.5rem; list-style: none; }
+/* The last row keeps no space of its own above the footer. */
+.contact-item:last-child { padding-bottom: 0; }
+/* Wide screens: two halves, the second starting on the middle hairline. The
+   phone number has its own ruled row under the email (Louisa, 2026-10-15);
+   LinkedIn stays at the top of the second half. */
+@media (min-width: 64rem) {
+  .contact-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .contact-item--phone, .contact-item:last-child { padding-bottom: 0; }
+  .contact-item:not(:last-child) { margin-right: 3rem; }
+  .contact-item--links { grid-column: 2; grid-row: 1; }
+}
+
+/* ---------- 404 ---------- */
+.notfound { min-height: min(80svh, 44rem); display: grid; align-content: center; gap: 1.5rem; padding-top: 8rem; }
+.notfound__code { font-size: clamp(6rem, 30vw, 20rem); line-height: 0.85; }
+
+/* ---------- Motion ---------- */
+@view-transition { navigation: auto; }
+.js [data-reveal], .js [data-reveal-lines] .line {
+  opacity: 0; filter: blur(6px);
+  transition: opacity var(--dur) var(--ease-out), filter var(--dur) var(--ease-out);
+}
+.js [data-reveal].is-in, .js [data-reveal-lines].is-in .line { opacity: 1; filter: none; }
+.js [data-reveal-lines].is-in .line:nth-child(2) { transition-delay: 160ms; }
+.js [data-reveal-lines].is-in .line:nth-child(3) { transition-delay: 320ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+  .js [data-reveal], .js [data-reveal-lines] .line { opacity: 1; filter: none; }
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}

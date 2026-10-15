@@ -1,0 +1,56 @@
+---
+// One visual with a caption: a photo or screen, or an SVG diagram.
+// - Photos and screens (JPG, PNG, WebP) go through astro:assets as AVIF/WebP
+//   and print into the paper.
+// - SVG diagrams are drawn inline, so their lines and text take the ink tones.
+//   Draw with currentColor (the body ink) and put class="ink-dan" (or ink-jiao,
+//   ink-nong, ink-zhong, ink-qing, ink-accent) on a shape or group for another
+//   strength. A diagram never shows wider than the SVG's own width and shrinks
+//   to fit smaller spaces, so draw it about 960 px wide with text of 16 px or
+//   more. Keep ids unique across the page: Figma exports can repeat ids such
+//   as clip0_1_2.
+// - `narrow` swaps in another version when the figure has less than 46rem
+//   (736 px) of room, e.g. a tall diagram whose text stays legible on phones.
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import type { SvgComponent } from 'astro/types';
+
+interface Props {
+  src: ImageMetadata;
+  narrow?: ImageMetadata;
+  alt: string;
+  caption?: string;
+}
+
+const { src, narrow, alt, caption } = Astro.props;
+const isSvg = (image: ImageMetadata) => image.format === 'svg';
+const versions = narrow
+  ? [{ image: src, className: 'figure__wide' }, { image: narrow, className: 'figure__narrow' }]
+  : [{ image: src, className: undefined }];
+// Width over height: in a Gallery, figures share a row in proportion to it.
+const ar = (src.width / src.height).toFixed(4);
+---
+
+<figure class:list={['figure', { 'figure--diagram': isSvg(src) }]} style={`--ar: ${ar}`} data-reveal>
+  <div class:list={['figure__media', { 'figure__media--swap': narrow }]}>
+    {versions.map(({ image, className }) => {
+      if (isSvg(image)) {
+        const Svg = image as unknown as SvgComponent;
+        return <Svg class={className} role="img" aria-label={alt} />;
+      }
+      return (
+        <Picture
+          src={image}
+          alt={alt}
+          widths={[640, 960, 1280, 1920]}
+          width={Math.min(image.width, 1920)}
+          sizes="(min-width: 90rem) 86rem, 100vw"
+          formats={['avif', 'webp']}
+          fallbackFormat="webp"
+          pictureAttributes={{ class: className }}
+        />
+      );
+    })}
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>

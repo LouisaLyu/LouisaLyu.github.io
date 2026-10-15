@@ -1,0 +1,47 @@
+---
+// About. Its words are in src/content/text/about.md; the philosophy is in
+// philosophy.md.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHead from '../components/SectionHead.astro';
+import Philosophy from '../components/Philosophy.astro';
+import { words } from '../lib/text';
+
+const about = (await words('about')).data;
+// Three lists under small labels: the skills (the one list the projects use),
+// then languages and libraries, then software and hardware.
+const groups = [
+  { label: about.skills.labels.list, items: about.skills.list, wide: true },
+  { label: about.skills.labels.code, items: about.skills.code, wide: false },
+  { label: about.skills.labels.tools, items: about.skills.tools, wide: false },
+].filter((group) => group.items.length);
+---
+
+<BaseLayout title={about.title} description={about.description}>
+  {/* The four facts are one block on the title's row, centred on it
+      (Louisa, 2026-10-13). The portrait comes back later (Louisa, 2026-10-10:
+      "Remove: Profile picture in the about page for now"). The intro paragraph
+      (the flat-pack desk story) was removed 2026-10-11; its text is kept in
+      plansAndWorks/week3-4-to-submit/02-personal-narrative.md. */}
+  <section class="container page-hero page-hero--about">
+    <h1 class="page-hero__title display" data-reveal-lines><span class="line">{about.title}</span></h1>
+    <dl class="facts page-hero__facts" data-reveal>
+      {about.facts.map((fact) => <div class:list={{ facts__wide: fact.wide }}><dt>{fact.label}</dt><dd>{fact.text}</dd></div>)}
+    </dl>
+  </section>
+
+  <Philosophy />
+
+  <section class="section container" aria-labelledby="skills-title">
+    <SectionHead title={about.skills.title} id="skills-title" aside={about.skills.aside} />
+    <div class="toolkit">
+      {groups.map((group) => (
+        <div class:list={['toolkit__group', { 'toolkit__group--wide': group.wide }]}>
+          <p class="label">{group.label}</p>
+          <ul class="skills">
+            {group.items.map((item) => <li class="skill" data-reveal><span>{item}</span></li>)}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

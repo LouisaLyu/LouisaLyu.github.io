@@ -1,0 +1,119 @@
+---
+// Home. Its words are in src/content/text/home.md (and site.md for the name
+// and the line under it).
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHead from '../components/SectionHead.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import TitleName from '../assets/title-name.svg';
+import { url } from '../lib/url';
+import { words } from '../lib/text';
+
+const site = (await words('site')).data;
+const home = (await words('home')).data;
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+// Every project by order, the FILLER slots included (Louisa, 2026-10-11:
+// "the selected works still only have 2 placeholders").
+const featured = projects;
+---
+
+<BaseLayout tabTitle={home.tabTitle}>
+  <section class="hero" aria-labelledby="hero-title">
+    {/* The ink wave, after Alta's hero (Louisa, 2026-10-11: "Make the home
+        screen follow this visual"), drawn here, not taken from Alta. It rises
+        behind the name, and its edge crosses the name the way Alta's crosses
+        "not dec|orations": between "Louisa" and "Lyu" (the name is centred) on
+        desktops and tablets, and at the end of the name on phones. One shape per layout; global.css shows one. */}
+    <div class="hero__wave" aria-hidden="true" data-reveal>
+      <svg class="hero__wave-art hero__wave-art--narrow" viewBox="0 0 510 475" preserveAspectRatio="none" focusable="false">
+        <linearGradient id="hero-ink-narrow" gradientUnits="userSpaceOnUse" x1="0" y1="100" x2="0" y2="440">
+          <stop offset="0.45" style="stop-color: var(--ink-jiao)" />
+          <stop offset="1" style="stop-color: var(--ink-zhong)" />
+        </linearGradient>
+        <path d="M0 80C150 72 340 60 382 141S450 250 510 262V475H0Z" fill="url(#hero-ink-narrow)" />
+      </svg>
+      <svg class="hero__wave-art hero__wave-art--medium" viewBox="0 0 930 450" preserveAspectRatio="none" focusable="false">
+        <linearGradient id="hero-ink-medium" gradientUnits="userSpaceOnUse" x1="0" y1="90" x2="0" y2="420">
+          <stop offset="0.45" style="stop-color: var(--ink-jiao)" />
+          <stop offset="1" style="stop-color: var(--ink-zhong)" />
+        </linearGradient>
+        <path d="M0 110C120 90 250 62 400 62C460 62 492 100 512 140S560 212 650 215S820 120 930 100V450H0Z" fill="url(#hero-ink-medium)" />
+      </svg>
+      <svg class="hero__wave-art hero__wave-art--wide" viewBox="0 0 1630 631" preserveAspectRatio="none" focusable="false">
+        <linearGradient id="hero-ink-wide" gradientUnits="userSpaceOnUse" x1="0" y1="150" x2="0" y2="560">
+          <stop offset="0.45" style="stop-color: var(--ink-jiao)" />
+          <stop offset="1" style="stop-color: var(--ink-zhong)" />
+        </linearGradient>
+        <path d="M0 290C170 200 330 104 520 104C700 104 831 140 883 220S990 320 1120 320S1420 170 1630 140V631H0Z" fill="url(#hero-ink-wide)" />
+      </svg>
+    </div>
+    {/* The grain: one tile of grey noise, repeated. */}
+    <svg class="hero__grain" aria-hidden="true" focusable="false">
+      <filter id="hero-noise" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" seed="4" stitchTiles="stitch" />
+        <feColorMatrix values="2 0 0 0 -0.5  2 0 0 0 -0.5  2 0 0 0 -0.5  0 0 0 0 1" />
+      </filter>
+      <pattern id="hero-grain" width="180" height="180" patternUnits="userSpaceOnUse">
+        <rect width="180" height="180" filter="url(#hero-noise)" />
+      </pattern>
+      <rect width="100%" height="100%" fill="url(#hero-grain)" />
+    </svg>
+    <div class="container hero__inner">
+      <div class="hero__heading">
+        {/* Louisa's own lettering of her name (Louisa, 2026-10-11); screen
+            readers and search engines read the name as text. */}
+        <h1 id="hero-title" class="hero__title" data-reveal>
+          <span class="visually-hidden">{site.name}</span>
+          <TitleName class="hero__name" aria-hidden="true" focusable="false" fill="currentColor" preserveAspectRatio="none" />
+        </h1>
+      </div>
+    </div>
+    <div class="container hero__foot on-ink">
+      <dl class="hero__facts">
+        {home.facts.map((fact) => <div><dt>{fact.label}</dt><dd>{fact.text}</dd></div>)}
+      </dl>
+    </div>
+  </section>
+
+  {/* A quiet cue that there is more below (Louisa, 2026-10-11): an arrow,
+      not a button. It sits in the space above Selected work and fades out as
+      the page scrolls (site.ts). */}
+  <div class="scroll-cue" aria-hidden="true" data-scroll-cue>
+    <svg viewBox="0 0 14 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 1v22M2 18l5 5 5-5" />
+    </svg>
+  </div>
+
+  <section id="work" class="section container" aria-labelledby="work-title">
+    <SectionHead title={home.work.title} id="work-title" />
+    {/* Round arrows on each side move the row two projects at a time; each
+        shows only when there is more that way (Louisa, 2026-10-12). They need
+        site.ts, so they stay hidden without it. */}
+    <div class="work-carousel">
+      <button class="work-arrow work-arrow--prev" type="button" aria-label="Previous projects" data-scroll-prev hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19 12H5M11 6l-6 6 6 6" /></svg>
+      </button>
+      <div class="work-scroll" role="region" aria-label="Selected projects, in a row that scrolls sideways" tabindex="0">
+        {featured.map((project) => <ProjectCard project={project} />)}
+      </div>
+      <button class="work-arrow work-arrow--next" type="button" aria-label="Next projects" data-scroll-next hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+      </button>
+    </div>
+    <p class="work-more"><a class="btn" href={url('/work/')}>{home.work.button}</a></p>
+  </section>
+
+  {/* The design philosophy is on About only (Louisa, 2026-10-11). */}
+  <section class="section container cta" aria-labelledby="cta-title">
+    {/* The heading's lines and the button are centred on the page (Louisa,
+        2026-10-13: "truly center aligned"), so the lines no longer step in. */}
+    <div class="cta__inner">
+      <h2 id="cta-title" class="cta__title display" data-reveal-lines>
+        {home.contact.lines.map((line) => <span class="line">{line}</span>)}
+      </h2>
+      <div class="cta__row">
+        <a class="btn" href={url('/contact/')}>{home.contact.button}</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

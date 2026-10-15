@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="430" viewBox="0 0 360 430" fill="none">
+  <!-- Phone version of diagram.svg: the same two paths, stacked. -->
+  <g class="ink-zhong" stroke="currentColor" stroke-width="1.25">
+    <rect x="10" y="10" width="160" height="52" rx="26"/>
+    <rect x="190" y="10" width="160" height="52" rx="26"/>
+    <rect x="10" y="104" width="160" height="52" rx="26"/>
+  </g>
+  <rect class="ink-accent" x="100" y="298" width="160" height="52" rx="26" stroke="currentColor" stroke-width="1.25"/>
+  <g class="ink-dan" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M90 66V100M84 94L90 100L96 94"/>
+    <path d="M90 208V245Q90 265 110 265H180"/>
+    <path d="M270 98V245Q270 265 250 265H180"/>
+    <path d="M180 265V294M174 288L180 294L186 288"/>
+    <path d="M180 354V384M174 378L180 384L186 378"/>
+  </g>
+  <g fill="currentColor" font-size="18" font-weight="500" text-anchor="middle">
+    <text class="ink-jiao" text-anchor="middle" x="90" y="42">Eight buttons</text>
+    <text class="ink-jiao" text-anchor="middle" x="270" y="42">Keyboard</text>
+    <text class="ink-jiao" text-anchor="middle" x="90" y="136">Two boards</text>
+    <text class="ink-accent" text-anchor="middle" x="180" y="330">p5.js sketch</text>
+  </g>
+  <g class="ink-dan" fill="currentColor" font-size="14">
+    <text x="270" y="84" text-anchor="middle">Arrow keys, W, A, S, D</text>
+    <text x="90" y="178" text-anchor="middle">Arduino Uno,</text>
+    <text x="90" y="196" text-anchor="middle">Makey Makey</text>
+    <text x="100" y="236">11 presses</text>
+    <text x="260" y="236" text-anchor="end">One press</text>
+  </g>
+  <text class="ink-zhong" x="180" y="412" fill="currentColor" font-size="16" text-anchor="middle">Colour · Bubbles · Note</text>
+</svg>

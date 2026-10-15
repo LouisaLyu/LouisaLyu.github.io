@@ -1,0 +1,18 @@
+---
+// Section opener: one large heading in plain words, and an optional side note.
+// No small label above it (Louisa, 2026-10-11). `centre` sets a smaller
+// heading centred on the page (the design philosophy, Louisa, 2026-10-13).
+interface Props {
+  title: string;
+  aside?: string;
+  id?: string;
+  centre?: boolean;
+}
+
+const { title, aside, id, centre = false } = Astro.props;
+---
+
+<header class:list={['section-head', { 'section-head--centre': centre }]}>
+  <h2 class="section-head__title display" id={id} data-reveal-lines><span class="line">{title}</span></h2>
+  {aside && <p class="section-head__aside" data-reveal>{aside}</p>}
+</header>

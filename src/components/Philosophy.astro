@@ -1,0 +1,18 @@
+---
+// Louisa's design philosophy, from src/content/text/philosophy.md. It is on
+// About only (Louisa, 2026-10-11: "Remove design philosophy in home page,
+// keep in about").
+import { render } from 'astro:content';
+import SectionHead from './SectionHead.astro';
+import { words } from '../lib/text';
+
+const entry = await words('philosophy');
+const { Content } = await render(entry);
+---
+
+<section id="philosophy" class="section container" aria-labelledby="philosophy-title">
+  <SectionHead title={entry.data.title} id="philosophy-title" centre />
+  <div class="philosophy">
+    <div class="philosophy__text prose" data-reveal><Content /></div>
+  </div>
+</section>

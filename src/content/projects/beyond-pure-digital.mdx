@@ -1,0 +1,81 @@
+---
+title: Beyond Pure Digital
+description: >-
+  An investigation into interaction design beyond purely digital interfaces,
+  testing physical inputs that trigger a response on screen.
+kind: investigation
+year: 2025
+role: Conceptualization, Investigation, Building, Visualization
+dates: March 23 – April 13, 2025
+tools: [Arduino Uno, Makey Makey, p5.js]
+skills: [Physical prototyping, Testing materials, Coding, Visual communication]
+cover: ./beyond-pure-digital/cover.jpg
+coverAlt: "A device with eight push buttons that uses an Arduino Uno and a Makey Makey to send button presses to the laptop."
+intro: >-
+  Many people couple the term “interaction design” with “digital user interface
+  (UI) and user experience (UX)”, where the designer designs digital elements
+  that people interact with online. This project, “Beyond Pure Digital”,
+  investigates the core of “interaction design” by showing how it can be beyond
+  purely digital interfaces. This results in a physical device, shown in the
+  image above, where the web page provides a different response based on the
+  button pressed.
+hasProcess: true
+status: draft
+order: 1
+---
+import Figure from '../../components/Figure.astro';
+import Gallery from '../../components/Gallery.astro';
+import Video from '../../components/Video.astro';
+import p5Tests from './beyond-pure-digital/p5-tests.mp4';
+import p5TestsPoster from './beyond-pure-digital/p5-tests-poster.jpg';
+import touchTests from './beyond-pure-digital/touch-tests.mp4';
+import touchTestsPoster from './beyond-pure-digital/touch-tests-poster.jpg';
+import wiringFirst from './beyond-pure-digital/wiring-first.jpg';
+import wiringTwoBoards from './beyond-pure-digital/wiring-two-boards.jpg';
+import demo from './beyond-pure-digital/demo.mp4';
+import demoPoster from './beyond-pure-digital/demo-poster.jpg';
+
+{/* The same sections as every project (Louisa, 2026-10-12): the intro names the project, then Goal, Method, Outcome, Insights.
+    An investigation, so Method gives the learning outcomes as findings (Presenting Your Work, slide 17). */}
+
+## Goal
+
+The goal of this project is to prototype and test a range of physical devices that users can use to induce a response from a digital medium. Through this testing, it is possible to select one device and build a complete interaction experience around it.
+
+## Method
+
+{/* Two parallel strands that meet in the Outcome (Louisa, 2026-10-13): the digital scene and the physical input.
+    Each runs test → finding → decision. Strand headings are drafts from Louisa's words ("the kind of digital
+    scenes I want to create", "the different means of physical interaction"); she rewrites them. */}
+
+### Digital scenes
+
+The investigation begins by exploring the different digital scenes controlled through keyboard inputs. This experiment builds on p5.js, a JavaScript library that enables drawing in the browser. In one of the initial tests, there is a cube inside of a torus that can be manipulated by pressing the arrow keys (left). However, a cube in one colour shows the limitation that it no longer seems 3D. For this reason, the latter iteration drops 3D shapes for full-screen fields of flat colour (light blue, cream, pale pink, violet and green), shown on the right side of the clip.
+
+{/* DRAFT alt and caption (Claude, 2026-10-13) from Louisa's own GIF captions (Activity 1: 11, 25); she rewrites them. */}
+<Video mp4={p5Tests} poster={p5TestsPoster} loop small alt="Two phone recordings of a laptop play side by side: a cube in one flat green inside a grey torus, and full-screen colour fields with soft circles." caption="A cube in one flat colour inside a torus (left) and the rough design with filled colours (right)." />
+
+### Physical interaction
+
+For the physical part, the investigation is on the different gadgets that the user can interact with. Using the Makey Makey, a board that turns conductive materials into keys, allows any touch to become a keystroke on a laptop. Some of the initial physical interaction tools include a copper-tape strip, pencil drawings, a flower in conductive paint, fingertips and lines of conductive string. In these examples, each location maps to a different keystroke. However, to close this circuit, the user also has to touch earth, so earth is moved into a pencil, the flower’s stem and a pair of scissors to keep coherence with the scene. These demonstrations, though interesting, are not great, as they are difficult to control and the touch remains unreliable.
+
+<Video mp4={touchTests} poster={touchTestsPoster} loop small alt="Six touch tests play at once, each wired to a laptop that answers on screen: copper-tape strips, pencil arrows on paper, a plant in conductive paint, fingertips wrapped in tape, and lines of conductive string on paper in two set-ups." caption="Touch designs in copper tape, pencil, conductive paint, taped fingertips and conductive string." />
+
+The final controller thus uses push buttons on a breadboard, wired to an Arduino Uno and the Makey Makey. Unlike tape, pencil lines or paint, a button prompts a press by itself, which makes it a good tool to invite interaction while also allowing a reliable connection. The board also enables simple scaling, making it possible to maintain eight buttons for more variations. When a button is pressed, the Arduino sends a signal to the web page, which shows a bubble that shoots up with the colour scheme based on the button.
+
+<Gallery>
+  <Figure src={wiringFirst} alt="A Makey Makey on a laptop keyboard, clipped to an Arduino Uno and to a breadboard holding a few loose buttons." caption="The first wiring." />
+  <Figure src={wiringTwoBoards} alt="A breadboard with six buttons wired to an Arduino and a Makey Makey." caption="Six buttons wired to both boards." />
+</Gallery>
+
+## Outcome
+
+Based on the findings from the previous sections and the goal of building a complete interaction experience through a physical device, the final product is a working controller wired with eight buttons. Each press of a button fills the laptop screen with a new background colour, sets off a burst of bubbles and plays a note from a five-note scale, so each physical action has both visible and audible feedback on screen.
+
+The same interaction can also be run from a computer keyboard, where the arrow keys and W, A, S and D give one bubble per press. These two thus can be seen as two mediums for the same idea. A demonstration is shown below.
+
+<Video mp4={demo} poster={demoPoster} small alt="A hand presses buttons on the breadboard; with each press the laptop screen turns a new colour as circles swell and fade." caption="The controller in use. The recording has no sound; each press also plays a note." />
+
+## Insights
+
+This project offers several pieces of insight and knowledge that are transferable to other works. For physical interaction tools, simple yet effective buttons may be a better choice compared to other seemingly cooler options. This can be further generalized to how simple, effective designs can outperform extravagant ones. Arduino and basic wiring allow for quick physical prototyping that can help test out a range of options before spending a lot of time building a final design.

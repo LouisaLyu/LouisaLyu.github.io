@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- The ink-blue dot from the header's name mark; lighter on dark browser tabs. -->
+  <style>circle { fill: #3b4f86; } @media (prefers-color-scheme: dark) { circle { fill: #a9b6dc; } }</style>
+  <circle cx="16" cy="16" r="10"/>
+</svg>

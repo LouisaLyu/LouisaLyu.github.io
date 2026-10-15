@@ -1,0 +1,121 @@
+---
+import { getCollection, render } from 'astro:content';
+import { Picture } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { url } from '../../lib/url';
+import { words } from '../../lib/text';
+
+export async function getStaticPaths() {
+  const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+  // Every skill must be one of the names listed in src/content/text/about.md.
+  const known = new Set((await words('about')).data.skills.list);
+  for (const project of projects) {
+    for (const skill of project.data.skills ?? []) {
+      if (!known.has(skill)) {
+        throw new Error(`The skill "${skill}" in ${project.id}.mdx is not in the skills list in src/content/text/about.md. Use a name from that list, or add it there first.`);
+      }
+    }
+  }
+  // Only real projects get a page; FILLER slots show on Home and Work without
+  // a link (Louisa, 2026-10-11: "remove the work detail page for
+  // place-holders"). "Next project" leads to the next one, wrapping round.
+  const real = projects.filter((project) => project.data.status !== 'filler');
+  return real.map((project) => {
+    const next = real.find((other) => other.data.order > project.data.order) ?? real[0];
+    return {
+      params: { slug: project.id },
+      props: { project, next: next && next.id !== project.id ? next : undefined },
+    };
+  });
+}
+
+const { project, next } = Astro.props;
+const { Content, headings } = await render(project);
+const d = project.data;
+// The words every project page shares are in src/content/text/project-page.md.
+const labels = (await words('projectPage')).data;
+// Every project has the same sections, Goal, Method, Outcome and Insights
+// (Louisa, 2026-10-12), after Presenting Your Work, slides 17–18. The intro above them
+// names the project (and its problem), so it has no heading of its own.
+const sections = headings.filter((heading) => heading.depth === 2);
+const coverWidths = d.status === 'filler' ? [640, 960, 1280] : [640, 800, 960, 1280, 1920, 2240];
+---
+
+<BaseLayout title={d.title} description={d.description} image={d.cover} imageAlt={d.coverAlt} type="article" progress>
+  <article>
+    <header class="container project-hero">
+      <div class="project-hero__inner">
+        <h1 class="project-hero__title display" data-reveal-lines><span class="line">{d.title}</span></h1>
+        <p class="project-meta"><span>{d.year}</span></p>
+      </div>
+      {/* Up to 2240 px wide, for sharp high-density screens; 2240 rather than the
+          sources' 2400 keeps the WebP fallback under the 500 KB budget. FILLER
+          covers stop at 1280: their grainy placeholder art compresses poorly. */}
+      <div class="project-cover crop" data-reveal>
+        <Picture
+          src={d.cover}
+          alt={d.coverAlt}
+          widths={coverWidths}
+          width={Math.min(d.cover.width, coverWidths[coverWidths.length - 1])}
+          sizes="(min-width: 90rem) 86rem, 100vw"
+          formats={['avif', 'webp']}
+          fallbackFormat="webp"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
+    </header>
+
+    <section class="container project-intro" aria-labelledby="intro-title">
+      <div class="project-intro__text" data-reveal>
+        <h2 id="intro-title" class="visually-hidden">Overview</h2>
+        {/* The graded short introduction comes first (Louisa, 2026-10-12).
+            The description is only for search results and link previews. */}
+        <p class="project-intro__lead">{d.intro}</p>
+        {(d.hasProcess || d.link) && (
+          <div class="project-intro__actions">
+            {d.hasProcess && <a class="btn" href="#process">{labels.processButton}</a>}
+            {d.link && (
+              <a class="btn btn--external" href={d.link.href} target="_blank" rel="noopener">
+                {d.link.label}<span class="visually-hidden"> (opens in a new tab)</span>
+              </a>
+            )}
+          </div>
+        )}
+      </div>
+      <dl class="facts project-intro__facts" data-reveal>
+        {/* No Team line (Louisa, 2026-10-12). Longer facts take the full
+            width on phones. */}
+        <div class="facts__wide"><dt>{labels.facts.role}</dt><dd>{d.role}</dd></div>
+        <div class="facts__wide"><dt>{labels.facts.dates}</dt><dd>{d.dates}</dd></div>
+        <div class="facts__wide"><dt>{labels.facts.tools}</dt><dd>{d.tools.join(', ')}</dd></div>
+        {d.skills && <div class="facts__wide"><dt>{labels.facts.skills}</dt><dd>{d.skills.join(', ')}</dd></div>}
+      </dl>
+    </section>
+
+    {d.hasProcess && (
+      <section id="process" class="container process" aria-label="Process">
+        <div class="process__head">
+          <div class="process__row">
+            <span>{labels.processLabel}</span>
+            <ol class="process__index" aria-label="On this page">
+              {sections.map((s) => <li><a href={`#${s.slug}`}>{s.text}</a></li>)}
+            </ol>
+          </div>
+        </div>
+        <div class="process__body">
+          <Content />
+        </div>
+      </section>
+    )}
+
+    {/* Just the button, at the left like every other page link (Louisa,
+        2026-10-11: "Keep next project button, but not the title and
+        screenshot"). Screen readers also hear which project it opens. */}
+    {next && (
+      <nav class="container next-project" aria-label={labels.nextLabel}>
+        <a class="btn" href={url(`/work/${next.id}/`)}>{labels.nextLabel}<span class="visually-hidden">: {next.data.title}</span></a>
+      </nav>
+    )}
+  </article>
+</BaseLayout>

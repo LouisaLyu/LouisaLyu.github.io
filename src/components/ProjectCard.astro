@@ -1,0 +1,39 @@
+---
+import { Picture } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { url } from '../lib/url';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { title, year, cover, status } = project.data;
+// A FILLER slot has no page, so its card is not a link and has no arrow
+// (Louisa, 2026-10-11: "Make the placeholders' buttons unclickable"), and
+// shows no year (Louisa, 2026-10-12).
+const filler = status === 'filler';
+const Link = filler ? 'div' : 'a';
+---
+
+<article class="card" data-reveal>
+  <Link class="card__link" href={filler ? undefined : url(`/work/${project.id}/`)}>
+    <div class="card__media crop">
+      <Picture
+        src={cover}
+        alt=""
+        widths={[480, 800, 1200]}
+        width={Math.min(cover.width, 1200)}
+        sizes="(min-width: 64rem) 36vw, (min-width: 48rem) 45vw, 82vw"
+        formats={['avif', 'webp']}
+        fallbackFormat="webp"
+        class="card__img"
+      />
+      {!filler && <span class="card__icon" aria-hidden="true">→</span>}
+    </div>
+    <div class="card__caption">
+      <h3 class="card__title">{title}</h3>
+      {!filler && <p class="card__meta mono">{year}</p>}
+    </div>
+  </Link>
+</article>
